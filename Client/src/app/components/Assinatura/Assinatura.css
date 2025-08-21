@@ -1,0 +1,109 @@
+.container-assinatura{
+    min-height: 100vh;
+    background-color: beige;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.termo-consentimento {
+  position: absolute;
+  top: 120px;
+  width: 80%;
+  padding: 1rem;
+  z-index: 20;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  margin-bottom: 1rem;
+}
+
+
+.termo-consentimento p {
+  text-align: center;
+}
+
+
+.slogan-assinatura{
+  position: absolute;
+  bottom: 300px;
+  width: 90%;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  font-weight: 700!important;
+  color: #000;
+}
+
+.assinatura{
+  position: relative;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-block: 20px;
+}
+.img-assinatura{
+  width: 100%;
+  z-index: 0;
+  opacity: 0.8;
+}
+
+.assinatura-form {
+  width: 100%;
+  position: absolute;
+  background-color: white;
+  padding: 1rem;
+  bottom: 0;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.linha {
+  display: flex;
+  gap: 5px;
+}
+
+.grupo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.campo {
+  padding: 4px 8px;
+  border: 1px solid #999;
+  background: #fff;
+  min-height: 30px;
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.assinatura-box {
+  flex: 2;
+}
+
+.assinatura-espaco {
+  border: 1px solid #333;
+  height: 60px;
+}
+
+label {
+  font-weight: bold;
+  color: #000;
+}
+
+input {
+  padding: 4px;
+  border: 1px solid #999;
+  width: 100%;
+}
+
+.rodape {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  font-weight: bold;
+  color: #000;
+  border-top: 1px solid #333;
+}

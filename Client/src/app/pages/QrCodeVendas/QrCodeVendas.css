@@ -1,0 +1,79 @@
+.qrcode-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e0f7fa, #80deea);
+  padding: 40px 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.qrcode-content {
+  background: white;
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  text-align: center;
+  max-width: 520px;
+  width: 100%;
+  user-select: none;
+}
+
+.empresa-nome {
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: #00796b;
+  margin-bottom: 28px;
+}
+
+.img-wrapper {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.img-qrcode {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+}
+
+.qrcode {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -61%);
+  width: 240px;
+  height: 240px;
+  border: 1px solid white;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  background: transparent !important;
+}
+
+.btn-baixar {
+  margin-bottom: 28px;
+  background: #00796b;
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 220px;
+}
+
+.btn-baixar:hover {
+  background: #004d40;
+}
+
+
+.btn-voltar{
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
