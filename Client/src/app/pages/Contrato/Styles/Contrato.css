@@ -129,11 +129,16 @@
 }
 
 .termos-contrato-segunda{
-  margin-top: 205px;
+  margin-top: 260px;
   padding: 0 35px;
   text-align: justify;
   font-size: 13px;
   line-height: 1.1;
+}
+
+
+.footer-segunda-pagina{
+  margin-top: 140px!important;
 }
 
 .linha-infos-termos {
@@ -157,8 +162,4 @@
 
 .tipo-atualizacao-contrato{
   line-height: 1.1;
-}
-
-.footer-segunda-pagina{
-  margin-top: 210px!important;
 }
