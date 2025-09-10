@@ -1,196 +1,164 @@
 .bg-contrato {
-  background: linear-gradient(150deg, #494ba7 50%, #25BFB2 50%);
-  min-height: 100vh;
+  background: linear-gradient(150deg, #781d92 50%, #cb6be6 50%);
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
-
-.page{
-  padding: 30px;
-  border: 2px solid #000;
-  border-radius: 15px;
-}
-
 .page-break {
-  page-break-before: always; 
+  page-break-before: always;
 }
-.bg-infos-contrato{
+.bg-infos-contrato {
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
   background-color: #fff;
-  border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   position: relative;
   z-index: 1;
-  padding: 20px;
 }
 
-.img-ads-full {
-  width: 100vh;
-  height: 100vh;
-  object-fit: cover;
+.primeiraPagina,
+.segundaPagina {
+  width: 800px;
+  min-height: 1070px;
+  position: relative;
+}
+
+.faixa-roxa-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background-color: #582c83;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 35px;
+  color: #fff;
+}
+
+
+
+.faixa-roxa-top {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: -2;
-  opacity: 0.18;
-}
-
-.svg-roxo {
-  width: 400px;
-  height: 400px;
-  rotate: 230deg;
-  position: absolute;
-  top: -200px;
-  left: 70px;
-  opacity: 0.7;
-  z-index: -1;
-}
-
-.img-mao {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  position: absolute;
-  top: 15px;
-  left: -20px;
-}
-.header {
   width: 100%;
-}
-.header-contrato {
-  width: 100%;
+  height: 200px;
+  background-color: #582c83;
+  border-radius: 0 0 40px 40px;
   display: flex;
-  justify-content: end;
   align-items: center;
-  flex-direction: row;
-  position: relative;
-}
-.text-laranja {
-  color: #ff7a00;
-}
-.header span {
-  font-size: 35px;
-  font-weight: bold;
-  margin-bottom: -20px;
-}
-
-.frase-header {
-  display: flex;
-  gap: 10px;
   justify-content: center;
-  align-items: center;
-}
-
-.frase-header-container {
-  display: flex;
   flex-direction: column;
+  color: #fff;
 }
 
-.icon-header-container {
+.primeiraPaginaContent {
+  background-image: url("/public/img/fundo_contrato.png");
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  position: absolute;
+  background-size: 90%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.title-component-contrato {
   display: flex;
-  align-items: end;
-  gap: 10px;
-}
-
-.icon-header-container p {
-  font-weight: 700;
-  color: rgb(3, 6, 146);
-  margin-bottom: 0px;
-  font-size: 16px;
-}
-
-.icon-header {
-  height: 40px;
-}
-
-.header-dados-adicionais{
-  display: flex;
-  justify-content: center;
-  align-items: end;
-  gap: 10px;
-}
-
-.info-empresa-contrato {
-  border: 3px solid rgb(3, 6, 146);
-  padding: 7px;
+  color: black;
+  background-color: #ff914d;
+  margin-bottom: 0;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding-inline: 10px;
   border-radius: 10px;
 }
 
-.colunas-duplas {
+.linha-campo {
   display: flex;
-  gap: 40px;
-  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
   flex-wrap: wrap;
 }
 
-.colunas-duplas > div {
+.campo-label {
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.campo-linha {
   flex: 1;
-  min-width: 200px;
+  border-bottom: 1px solid black;
+  height: 18px;
+  line-height: 20px;
 }
 
-.info-empresa-contrato p {
-  font-size: 17px;
-  font-weight: bold;
-}
-
-.info-valor-contrato{
-  padding: 20px;
+.autorizante-contrato {
   position: relative;
-  height: 150px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
 }
 
-.info-valor-contrato p {
-  font-size: 18px;
-  font-weight: bold;
+.img-contrato-relogio{
+  position: absolute;
+  bottom: 50px;
+  right: 10%;
+  width: 100px;
+}
+
+.assinatura-prop-contrato {
+  position: absolute;
+  right: 0;
+}
+
+.assinatura-prop-contrato .campo-linha {
+  bottom: -25px;
+}
+
+.faixa-roxa-top h1::after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 4px;
+  background-color: #ff914d;
+  margin-top: 10px;
+  border-radius: 2px;
+}
+
+.termos-contrato-segunda{
+  margin-top: 205px;
+  padding: 0 35px;
+  text-align: justify;
+  font-size: 13px;
+  line-height: 1.1;
+}
+
+.linha-infos-termos {
+  border-bottom: 1px solid rgb(0, 0, 0, 0.15);
+  flex: 1;
+  height: 18px;
+  line-height: 10px;
+}
+
+.faixa-roxa-bottom-segunda {
+  margin-top: 20px;
+  border-radius: 30px 30px 0 0;
+  position: absolute;
+  bottom: -24px;
+  left: 0;
+  width: 100%;
+  height: 35px;
+  background-color: #582c83;
 }
 
 
-
-.termos-container{
-  max-width: 800px;
+.tipo-atualizacao-contrato{
+  line-height: 1.1;
 }
 
-.qrcode-contrato {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.container-title-footer-contrato{
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-direction: row;
-}
-
-.title-footer-contrato{
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  gap: 10px;
-}
-
-.title-footer-contrato p {
-  margin: 0px;
-  color: green;
-  font-weight: 600;
-  font-size: 20px;
-}
-
-.container-title-footer-contrato-right{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.footer{
-  margin-top: 100px;
+.footer-segunda-pagina{
+  margin-top: 210px!important;
 }

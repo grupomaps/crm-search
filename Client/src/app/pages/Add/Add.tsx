@@ -66,6 +66,7 @@ export const Add = () => {
     parcelaRecorrente: "1990",
     diaData: "",
     valorExtenso: "",
+    diasSemana: [] as string[],
   });
 
   const [parcelasArray, setParcelasArray] = useState<Parcela[]>([]);

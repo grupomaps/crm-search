@@ -62,6 +62,7 @@ interface DadosEmpresaProps {
     responsavel: string;
     cargo: string;
     numeroResidencial: string;
+    horarios?: { [dia: string]: string }; // Adicionado para suportar os horários por dia
   };
   handleInputChange: (
     e: React.ChangeEvent<
@@ -159,7 +160,10 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
 
       console.log("Dados recebidos:", data);
 
-      if (data.situacao_cadastral?.situacao_atual?.toUpperCase() === "INAPTA" || data.situacao_cadastral?.situacao_atual?.toUpperCase() === "BAIXADA") {
+      if (
+        data.situacao_cadastral?.situacao_atual?.toUpperCase() === "INAPTA" ||
+        data.situacao_cadastral?.situacao_atual?.toUpperCase() === "BAIXADA"
+      ) {
         setModalMessage(
           `A empresa com o CNPJ informado está com a situação ${
             data.situacao_cadastral?.situacao_atual || "desconhecida"
@@ -413,7 +417,7 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
         />
       </div>
 
-      <div className="form-group mb-3 col-md-4">
+      <div className="form-group mb-3 col-md-6">
         <label htmlFor="whatsapp">Whatsapp Comercial</label>
         <input
           type="text"
@@ -426,7 +430,7 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
         />
       </div>
 
-      <div className="form-group mb-3 col-md-4">
+      <div className="form-group mb-3 col-md-6">
         <label htmlFor="email1">1º E-mail</label>
         <input
           type="text"
@@ -438,17 +442,44 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
           placeholder="Insira o primeiro e-mail"
         />
       </div>
-      <div className="form-group mb-3 col-md-4">
+      <div className="form-group mb-3 col-md-12">
         <label htmlFor="horarioFuncionamento">Horário de Funcionamento</label>
-        <input
-          type="text"
-          className="form-control"
-          id="horarioFuncionamento"
-          name="horarioFuncionamento"
-          value={form.horarioFuncionamento}
-          onChange={handleInputChange}
-          placeholder="Insira o horário de funcionamento"
-        />
+        <div className="row d-flex justify-content-center">
+          {[
+            "Domingo",
+            "Segunda",
+            "Terça",
+            "Quarta",
+            "Quinta",
+            "Sexta",
+            "Sábado",
+          ].map((dia) => (
+            <div className="col-md-1 mb-3" key={dia}>
+              <label htmlFor={`horario-${dia}`} className="form-label fw-bold">
+                {dia}
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id={`horario-${dia}`}
+                name={`horario-${dia}`}
+                placeholder="Ex: 08:00 - 18:00"
+                value={form.horarios?.[dia] || ""}
+                onChange={(e) => {
+                  handleInputChange({
+                    target: {
+                      name: "horarios",
+                      value: {
+                        ...form.horarios,
+                        [dia]: e.target.value,
+                      },
+                    },
+                  } as unknown as React.ChangeEvent<HTMLInputElement>);
+                }}
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="form-group mb-3 col-md-4">

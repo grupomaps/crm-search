@@ -6,10 +6,8 @@ import html2pdf from "html2pdf.js";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import { useParams } from "react-router-dom";
-import Header from "./Components/Header";
-import InfoEmpresa from "./Components/InfoEmpresa";
-import Termos from "./Components/Termos";
-import Footer from "./Components/Footer";
+import PrimeiraPagina from "./Components/PrimeiraPagina";
+import SegundaPagina from "./Components/SegundaPagina";
 
 export const Contrato: FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -44,7 +42,6 @@ export const Contrato: FC = () => {
       return;
     }
 
-    // Configurações do PDF
     const opt = {
       margin: 0,
       filename: `${clientData?.razaoSocial || "contrato"}.pdf`,
@@ -56,7 +53,6 @@ export const Contrato: FC = () => {
       jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
     };
 
-    // Geração
     html2pdf()
       .set(opt)
       .from(contratoElement)
@@ -72,18 +68,8 @@ export const Contrato: FC = () => {
       <div className="bg-infos-contrato" id="contrato">
         {clientData && (
           <>
-            <div className="page">
-              <Header empresa={clientData} />
-              <img src="/img/ads_logo.png" alt="" className="img-ads-full" />
-              <InfoEmpresa empresa={clientData} />
-            </div>
-            <div className="page-break" />
-            <div className="termos-contrato">
-              <div className="page">
-                <Termos empresa={clientData} />
-                <Footer empresa={clientData} />
-              </div>
-            </div>
+          <PrimeiraPagina empresaData={clientData} />
+          <SegundaPagina empresaData={clientData} />
           </>
         )}
             

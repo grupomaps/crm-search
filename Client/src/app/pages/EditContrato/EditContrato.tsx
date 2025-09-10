@@ -53,6 +53,7 @@ interface ClientData {
   valorExtenso: string;
   numeroResidencial: string;
   linkAssinatura: string;
+  horarios?: { [dia: string]: string };
 }
 
 export const EditContrato = () => {

@@ -23,6 +23,7 @@ interface VendaData {
   cargo: string;
   linkGoogle: string;
   numeroResidencial: string;
+  horarios?: { [dia: string]: string };
 }
 
 interface EditEmpresaFormProps {
@@ -231,13 +232,45 @@ export const EditEmpresa: React.FC<EditEmpresaFormProps> = ({
         onChange={handleInputChange}
         placeholder="Insira o primeiro e-mail"
       />
-      <InputField
-        id="horarioFuncionamento"
-        label="Horário de funcionamento"
-        name="horarioFuncionamento"
-        value={form.horarioFuncionamento}
-        onChange={handleInputChange}
-      />
+      <div className="form-group mb-3 col-md-12">
+        <label htmlFor="horarioFuncionamento">Horário de Funcionamento</label>
+        <div className="row d-flex justify-content-center">
+          {[
+            "Domingo",
+            "Segunda",
+            "Terça",
+            "Quarta",
+            "Quinta",
+            "Sexta",
+            "Sábado",
+          ].map((dia) => (
+            <div className="col-md-1 mb-3" key={dia}>
+              <label htmlFor={`horario-${dia}`} className="form-label fw-bold">
+                {dia}
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id={`horario-${dia}`}
+                name={`horario-${dia}`}
+                placeholder="Ex: 08:00 - 18:00"
+                value={form.horarios?.[dia] || ""}
+                onChange={(e) => {
+                  handleInputChange({
+                    target: {
+                      name: "horarios",
+                      value: {
+                        ...form.horarios,
+                        [dia]: e.target.value,
+                      },
+                    },
+                  } as unknown as React.ChangeEvent<HTMLInputElement>);
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
       <InputField
         id="responsavel"
         label="Nome do Responsável"

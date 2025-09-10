@@ -1,66 +1,8 @@
-.cx-decoration__lines {
-  --lines-top-shift: -3.75rem;
-  position: absolute;
-  max-height: 100%;
-  fill: #79a3d9;
-  opacity: 0.9;
-}
-
-.cx-decoration__lines:dir(rtl) {
-  transform: scaleX(-1);
-}
-
-.cx-decoration__bottom-left-lines,
-.cx-decoration__bottom-right-lines,
-.cx-decoration__top-left-lines,
-.cx-decoration__top-right-lines {
-  display: none;
-}
-
-@media (min-width: 35.5em) {
-  .cx-decoration__top-left-lines {
-    display: block;
-    max-width: 24.25rem;
-    inset-block-start: 0;
-    inset-inline-start: 0;
-    transform: translateY(var(--lines-top-shift));
-  }
-
-  .cx-decoration__top-left-lines:dir(rtl) {
-    transform: translateY(var(--lines-top-shift)) scaleX(-1);
-  }
-
-  .cx-decoration__bottom-right-lines {
-    display: block;
-    max-width: 50.875rem;
-    inset-block-end: 0;
-    inset-inline-end: 0;
-  }
-}
-
-@media (min-width: 50em) {
-  .cx-decoration__top-right-lines {
-    display: block;
-    max-width: 28.5625rem;
-    inset-block-start: 0;
-    inset-inline-end: 0;
-    transform: translateY(var(--lines-top-shift));
-  }
-
-  .cx-decoration__top-right-lines:dir(rtl) {
-    transform: translateY(var(--lines-top-shift)) scaleX(-1);
-  }
-
-  .cx-decoration__bottom-left-lines {
-    display: block;
-    max-width: 12.8125rem;
-    inset-block-end: 0;
-    inset-inline-start: 0;
-  }
-}
-
 .Home {
-  background: linear-gradient(90deg, #464e80, #800020);
+  background-image: url("/public/img/login.jpg");
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
   z-index: -2;
 }
 
@@ -82,9 +24,9 @@ small {
   flex-direction: column;
   justify-content: center;
   align-self: center;
-  width: 500px;
-  height: 600px;
-  background-color: rgba(255, 255, 255, 0.9);
+  width: 400px;
+  height: 450px;
+  background-color: #ebbd29;
   border-radius: 25px;
   padding: 20px;
   z-index: 2;
@@ -100,13 +42,13 @@ small {
 .inputs-login .form-control {
   text-align: center;
   font-size: 18px;
-  width: 450px;
+  width: 350px;
   margin: 15px auto;
   background-color: #fff !important;
 }
 
 .btn-login {
-  background: #7d8be7 !important;
+  background: #cb6be6 !important;
   font-size: 19px !important;
   transition: all 0.2s ease-in-out !important;
   margin-bottom: 10px;
@@ -118,7 +60,7 @@ small {
 }
 
 .btn-login:hover {
-  background-color: #4e5687 !important;
+  background-color: #781d92!important;
   color: #000 !important;
   color: #ffffff !important;
   font-weight: 700 !important;
