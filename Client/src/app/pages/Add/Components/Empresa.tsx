@@ -63,6 +63,8 @@ interface DadosEmpresaProps {
     cargo: string;
     numeroResidencial: string;
     horarios?: { [dia: string]: string }; // Adicionado para suportar os horários por dia
+    linkAddAssinatura: string;
+
   };
   handleInputChange: (
     e: React.ChangeEvent<
@@ -255,9 +257,8 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
 
   return (
     <div className="row d-flex justify-content-center">
-      <h4 className="text-white">Dados da Empresa</h4>
 
-      <div className="form-group mb-3 col-md-4">
+      {/* <div className="form-group mb-3 col-md-4">
         <label htmlFor="razaoSocial">Razão Social</label>
         <input
           type="text"
@@ -268,8 +269,20 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
           onChange={handleInputChange}
           placeholder="Insira a razão social"
         />
+      </div> */}
+      <div className="form-group mb-3 col-md-6">
+        <label htmlFor="data">Data da Venda (dd/mm/aaaa)</label>
+        <input
+          type="date"
+          className="form-control"
+          id="data"
+          name="data"
+          value={form.data}
+          onChange={handleInputChange}
+          required
+        />
       </div>
-      <div className="form-group mb-3 col-md-4">
+      <div className="form-group mb-3 col-md-6">
         <label htmlFor="nomeFantasia">CNPJ</label>
         <input
           type="text"
@@ -282,7 +295,7 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
           placeholder="Insira o cnpj"
         />
       </div>
-      <div className="form-group mb-3 col-md-4">
+      <div className="form-group mb-3 col-md-6">
         <label htmlFor="nomeFantasia">CPF</label>
         <input
           type="text"
@@ -294,7 +307,19 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
           placeholder="Insira o cpf"
         />
       </div>
-
+      <div className="form-group mb-3 col-md-6">
+        <label htmlFor="nomeFantasia">Link da Assinatura</label>
+        <input
+          type="text"
+          className="form-control"
+          id="linkAddAssinatura"
+          name="linkAddAssinatura"
+          value={form.linkAddAssinatura}
+          onChange={handleInputChange}
+          placeholder="Insira o Link da Assinatura"
+        />
+      </div>
+{/* 
       <div className="form-group mb-3 col-md-4">
         <label htmlFor="nomeFantasia">Nome Fantasia</label>
         <input
@@ -517,7 +542,7 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
           onChange={handleInputChange}
           placeholder="Insira o link da página do Google Maps"
         />
-      </div>
+      </div> */}
       {isModalOpen && (
         <div
           className="modal fade show d-block"

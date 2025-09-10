@@ -26,7 +26,7 @@ export const Add = () => {
     operador: nome,
     createdBy: userId,
     setor: cargo,
-    equipe: "TF GESTÃO DE TRÁFEGO",
+    equipe: "SEARCH 360",
     account: "",
     razaoSocial: "",
     cpf: "",
@@ -67,6 +67,7 @@ export const Add = () => {
     diaData: "",
     valorExtenso: "",
     diasSemana: [] as string[],
+    linkAddAssinatura: "",
   });
 
   const [parcelasArray, setParcelasArray] = useState<Parcela[]>([]);
@@ -316,33 +317,31 @@ export const Add = () => {
       <div className="container">
         <h2 className="title-contrato">Adicionar Informações do Cliente</h2>
         <form onSubmit={handleSubmit}>
-          {step === 0 && (
+          <DadosEmpresa
+              form={form}
+              handleInputChange={handleInputChange}
+              tipoDocumento={tipoDocumento}
+            />
+          {/* {step === 0 && (
             <Operador
               form={form}
               handleInputChange={handleInputChange}
               handleSelectChange={handleSelectChange}
               operadoresOpcoes={[]}
             />
-          )}
-          {step === 1 && (
-            <DadosEmpresa
-              form={form}
-              handleInputChange={handleInputChange}
-              tipoDocumento={tipoDocumento}
-            />
-          )}
-          {step === 2 && (
+          )} */}
+          {/* {step === 2 && (
             <>
               <InfoAdicionais
                 form={form}
                 handleInputChange={handleInputChange}
               />
-              {/* <input
+              <input
                 type="text"
                 value={novaSenha}
                 onChange={(e) => setNovaSenha(e.target.value)}
               />
-              <button onClick={handleTrocarSenha}>Alterar Senha</button> */}
+              <button onClick={handleTrocarSenha}>Alterar Senha</button>
               <div className="parcelas-container mt-3">
                 <h4>Detalhes das Parcelas</h4>
                 {parcelasArray.length > 0 ? (
@@ -385,17 +384,26 @@ export const Add = () => {
                 )}
               </div>
             </>
-          )}
+          )} */}
 
           <div className="mt-4">
-            {step >= 0 && (
-              <button
+            <button
                 type="button"
                 className="btn btn-danger me-2"
                 onClick={sairFicha}
               >
                 Sair
               </button>
+             <button
+                type="button"
+                className="btn btn-success"
+                onClick={handleSubmit}
+                disabled={loading}
+              >
+                {loading ? "Salvando..." : "Salvar"}
+              </button>
+            {/* {step >= 0 && (
+              
             )}
             {step > 0 && (
               <button
@@ -417,15 +425,8 @@ export const Add = () => {
               </button>
             )}
             {step === 2 && (
-              <button
-                type="button"
-                className="btn btn-success"
-                onClick={handleSubmit}
-                disabled={loading}
-              >
-                {loading ? "Salvando..." : "Salvar"}
-              </button>
-            )}
+             
+            )} */}
           </div>
         </form>
         <ToastContainer />

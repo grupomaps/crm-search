@@ -13,6 +13,7 @@ interface OperadorProps {
     formaPagamento: string;
     diaData: string;
     valorExtenso: string;
+    linkAddAssinatura: string;
   };
   handleInputChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -83,7 +84,7 @@ export const Operador: React.FC<OperadorProps> = ({
           readOnly
         />
       </div>
-      <div className="form-group mb-3 col-md-4">
+      {/* <div className="form-group mb-3 col-md-4">
         <label htmlFor="valorVenda">Valor da Venda</label>
         <input
           type="text"
@@ -133,7 +134,7 @@ export const Operador: React.FC<OperadorProps> = ({
           <option value="Boleto">Boleto</option>
           <option value="Crédito">Crédito</option>
         </select>
-      </div>
+      </div> */}
 
       <div className="form-group mb-3 col-md-4">
         <label htmlFor="data">Data da Venda (dd/mm/aaaa)</label>
@@ -147,7 +148,7 @@ export const Operador: React.FC<OperadorProps> = ({
           required
         />
       </div>
-      <div className="form-group mb-3 col-md-4">
+      {/* <div className="form-group mb-3 col-md-4">
         <label htmlFor="data">Data do Vencimento (dd/mm/aaaa)</label>
         <input
           type="date"
@@ -157,7 +158,7 @@ export const Operador: React.FC<OperadorProps> = ({
           value={form.dataVencimento}
           onChange={handleDateChange}
         />
-      </div>
+      </div> */}
       <div className="form-group mb-3 col-md-4">
         <label htmlFor="operador">Operador</label>
         <input
@@ -184,7 +185,7 @@ export const Operador: React.FC<OperadorProps> = ({
         />
       </div>
 
-      <div className="form-group mb-3 col-md-4">
+      {/* <div className="form-group mb-3 col-md-4">
         <label htmlFor="validade">Válido por</label>
         <select
           className="form-control"
@@ -200,7 +201,7 @@ export const Operador: React.FC<OperadorProps> = ({
           <option value="Semestral">Semestral</option>
           <option value="Anual">Anual</option>
         </select>
-      </div>
+      </div> */}
     </div>
   );
 };

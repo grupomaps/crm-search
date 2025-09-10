@@ -23,6 +23,8 @@ interface VendaData {
   cargo: string;
   linkGoogle: string;
   numeroResidencial: string;
+      linkAddAssinatura: string;
+data: string;
   horarios?: { [dia: string]: string };
 }
 
@@ -105,14 +107,14 @@ export const EditEmpresa: React.FC<EditEmpresaFormProps> = ({
   return (
     <div className="row d-flex justify-content-center">
       <h4 className="text-white">Dados da Empresa</h4>
-      <InputField
+      {/* <InputField
         id="razaoSocial"
         label="Razão Social"
         name="razaoSocial"
         value={form.razaoSocial}
         onChange={handleInputChange}
         placeholder="Insira a razão social"
-      />
+      /> */}
       <div className="form-group mb-3 col-md-4">
         <label htmlFor="documento">{tipoDocumento}</label>
         <div className="input-group">
@@ -138,6 +140,26 @@ export const EditEmpresa: React.FC<EditEmpresaFormProps> = ({
         </div>
       </div>
       <InputField
+        id="linkAddAssinatura"
+        label="Link da Assinatura"
+        name="linkAddAssinatura"
+        value={form.linkAddAssinatura}
+        onChange={handleInputChange}
+        placeholder="Insira o nome fantasia"
+      />
+      <div className="form-group mb-3 col-md-4">
+        <label htmlFor="data">Data da Venda (dd/mm/aaaa)</label>
+        <input
+          type="date"
+          className="form-control"
+          id="data"
+          name="data"
+          value={form.data}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
+      {/* <InputField
         id="nomeFantasia"
         label="Nome Fantasia"
         name="nomeFantasia"
@@ -291,7 +313,7 @@ export const EditEmpresa: React.FC<EditEmpresaFormProps> = ({
         name="linkGoogle"
         value={form.linkGoogle}
         onChange={handleInputChange}
-      />
+      /> */}
     </div>
   );
 };

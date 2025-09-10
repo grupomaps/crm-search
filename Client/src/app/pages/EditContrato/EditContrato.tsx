@@ -54,6 +54,7 @@ interface ClientData {
   numeroResidencial: string;
   linkAssinatura: string;
   horarios?: { [dia: string]: string };
+  linkAddAssinatura: string;
 }
 
 export const EditContrato = () => {
@@ -196,14 +197,30 @@ export const EditContrato = () => {
     updateClientData();
   };
 
-  const renderStep = () => {
-    switch (step) {
-      case 0:
-        return (
-          <EditOperador form={clientData} handleInputChange={handleInputChange} />
-        );
-      case 1:
-        return (
+  // const renderStep = () => {
+  //   switch (step) {
+  //     case 0:
+  //       return (
+  //         <EditOperador form={clientData} handleInputChange={handleInputChange} />
+  //       );
+  //     case 1:
+  //       return (
+          
+  //       );
+  //     case 2:
+  //       return (
+  //         <EditInfoAdicionais form={clientData} handleInputChange={handleInputChange} />
+  //       );
+  //     default:
+  //       return null;
+  //   }
+  // };
+
+  return (
+    <div className="contrato text-center">
+      <div className="container">
+        <h2 className="title-contrato">Editar Informações do Cliente</h2>
+        <form onSubmit={handleSubmit}>
           <EditEmpresa
             form={clientData}
             handleInputChange={handleInputChange}
@@ -211,27 +228,12 @@ export const EditContrato = () => {
             handleToggleDocumento={handleToggleDocumento}
             isRotated={isRotated}
           />
-        );
-      case 2:
-        return (
-          <EditInfoAdicionais form={clientData} handleInputChange={handleInputChange} />
-        );
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <div className="contrato text-center">
-      <div className="container">
-        <h2 className="title-contrato">Editar Informações do Cliente</h2>
-        <form onSubmit={handleSubmit}>
-          {renderStep()}
           <div className="mt-4 d-flex gap-4 justify-content-center">
-            {step === 0 && (
-              <button type="button" className="btn btn-danger" onClick={sairFicha}>
+             <button type="button" className="btn btn-danger" onClick={sairFicha}>
                 Sair
               </button>
+            {/* {step === 0 && (
+             
             )}
             {step > 0 && (
               <button type="button" className="btn btn-secondary" onClick={handleBack}>
@@ -242,7 +244,7 @@ export const EditContrato = () => {
               <button type="button" className="btn btn-primary" onClick={handleNext}>
                 Próximo
               </button>
-            )}
+            )} */}
             <button type="submit" className="btn btn-success btn-salvar">
               Salvar
             </button>
