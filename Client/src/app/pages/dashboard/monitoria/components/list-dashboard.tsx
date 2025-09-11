@@ -99,7 +99,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
           ...doc.data(),
         })) as Venda[];
   
-        const fullAccessRoles = ["adm", "monitoria", "supervisor", "posVenda"];
+        const fullAccessRoles = ["adm", "monitoria", "supervisor", "posVenda", "cobranca"];
   
         const filteredVendas = fullAccessRoles.includes(userRole)
           ? vendasList

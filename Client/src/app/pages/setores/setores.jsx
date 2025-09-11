@@ -20,6 +20,7 @@ export const Setores = () => {
       <h1 className="title text-center">Escolha um Setor</h1>
       <div className="sector-container row justify-content-center">
         {(cargo === "vendas" ||
+        cargo === "cobranca" ||
           cargo === "supervisor" ||
           cargo === "marketing" ||
           cargo === "adm" ||
@@ -36,6 +37,7 @@ export const Setores = () => {
           </div>
         )}
         {(cargo === "posVenda" ||
+        cargo === "cobranca" ||
           cargo === "supervisor" ||
           cargo === "adm") && (
           <div className="sector col-10 col-md-4 col-lg-3">
@@ -50,6 +52,7 @@ export const Setores = () => {
           </div>
         )}
         {(cargo === "monitoria" ||
+        cargo === "cobranca" ||
         cargo === "posVenda" ||
           cargo === "supervisor" ||
           cargo === "adm") && (
@@ -66,6 +69,7 @@ export const Setores = () => {
         )}
 
         {(cargo === "marketing" ||
+        cargo === "cobranca" ||
           cargo === "supervisor" ||
           cargo === "adm") && (
           <div className="sector col-10 col-md-4 col-lg-3">

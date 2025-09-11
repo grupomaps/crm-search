@@ -43,10 +43,10 @@ export const LocalRoutes: React.FC = () => {
           <Route path="/perfil" element={<PrivateRoute element={<Perfil />} />} />
           <Route path="/vendas" element={<PrivateRoute element={<Vendas />} requiredCargo={["vendas", "supervisor", "monitoria", "cobranca", "financeiro", "marketing"]} />} />
           <Route path="/assinatura/:id" element={<PrivateRoute element={<Assinatura />} />} />
-          <Route path="/cancelados" element={<PrivateRoute element={<Cancelados />} requiredCargo={["vendas", "supervisor"]} />} />
-          <Route path="/monitoria" element={<PrivateRoute element={<Monitoria />} requiredCargo={["monitoria", "supervisor", "posVenda"]} />} />
+          <Route path="/cancelados" element={<PrivateRoute element={<Cancelados />} requiredCargo={["vendas", "supervisor", "cobranca"]} />} />
+          <Route path="/monitoria" element={<PrivateRoute element={<Monitoria />} requiredCargo={["monitoria", "supervisor", "posVenda", "cobranca"]} />} />
           <Route path="/marketing" element={<PrivateRoute element={<Marketing />} requiredCargo={["marketing", "supervisor", "cobranca", "financeiro"]} />} />
-          <Route path="/pos-venda" element={<PrivateRoute element={<PosVenda />} requiredCargo={["posVenda", "supervisor"]} />} />
+          <Route path="/pos-venda" element={<PrivateRoute element={<PosVenda />} requiredCargo={["posVenda", "supervisor", "cobranca"]} />} />
           <Route path="/financeiro" element={<PrivateRoute element={<Financeiro />} requiredCargo={["financeiro", "cobranca"]} />} />
           <Route path="/cobranca" element={<PrivateRoute element={<Cobranca />} requiredCargo="cobranca" />} />
           <Route path="/relatorio" element={<PrivateRoute element={<Relatorio />} />} />

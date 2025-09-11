@@ -170,7 +170,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
             ...doc.data(),
           })) as Marketing[];
           const filteredMarketings =
-            cargo === "adm" || cargo === "marketing" || cargo === "supervisor"
+            cargo === "adm" || cargo === "marketing" || cargo === "supervisor" || cargo === "cobranca"
               ? marketingsList
               : marketingsList.filter(
                   (marketing) => marketing.createdBy === auth.currentUser?.uid

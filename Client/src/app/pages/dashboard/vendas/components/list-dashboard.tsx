@@ -113,6 +113,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
           userCargo === "adm" ||
           userCargo === "supervisor" ||
           userCargo === "marketing" ||
+          userCargo === "cobranca" ||
           userCargo === "grazi"
             ? vendasList
             : vendasList.filter((venda) => venda.createdBy === currentUser.uid);
