@@ -78,12 +78,12 @@ export const Contrato: FC = () => {
         </label>
         <div className="link-container">
           <a
-            href={clientData.linkAddAssinatura}
+            href={clientData?.linkAddAssinatura}
             target="_blank"
             rel="noopener noreferrer"
             className="linkDaAssinatura"
           >
-            {clientData.linkAddAssinatura}
+            {clientData?.linkAddAssinatura}
           </a>
         </div>
       </div>
