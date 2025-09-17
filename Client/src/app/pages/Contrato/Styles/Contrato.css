@@ -9,13 +9,44 @@
   page-break-before: always;
 }
 .bg-infos-contrato {
-  margin-top: 50px;
+  min-height: 100vh;
+  /* margin-top: 50px; */
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
-  background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
   position: relative;
   z-index: 1;
+}
+
+.link-container {
+  background: #f9f9f9;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  transition: all 0.2s ease-in-out;
+}
+
+.link-container:hover {
+  border-color: #007bff;
+  background: #f1f7ff;
+}
+
+.linkDaAssinatura {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+  word-break: break-word; /* evita quebrar layout se o link for gigante */
+}
+
+.linkDaAssinatura:hover {
+  text-decoration: underline;
+}
+
+.bg-infos-contrato .linkDaAssinatura{
+  width: 100%;
 }
 
 .primeiraPagina,

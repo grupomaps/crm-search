@@ -66,17 +66,30 @@ export const Contrato: FC = () => {
   return (
     <div className="bg-contrato">
       <div className="bg-infos-contrato" id="contrato">
-        {clientData && (
+        {/* {clientData && (
           <>
           <PrimeiraPagina empresaData={clientData} />
           <SegundaPagina empresaData={clientData} />
           </>
-        )}
+        )} */}
             
+        <label htmlFor="link-assinatura" className="block mb-2 font-medium fs-2 text-white">
+          Link da Assinatura
+        </label>
+        <div className="link-container">
+          <a
+            href={clientData.linkAddAssinatura}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="linkDaAssinatura"
+          >
+            {clientData.linkAddAssinatura}
+          </a>
+        </div>
       </div>
-      <button className="btn btn-danger mt-4" onClick={downloadPDF}>
+      {/* <button className="btn btn-danger mt-4" onClick={downloadPDF}>
         <FontAwesomeIcon icon={faFilePdf} /> Baixar PDF
-      </button>
+      </button> */}
     </div>
   );
 };
