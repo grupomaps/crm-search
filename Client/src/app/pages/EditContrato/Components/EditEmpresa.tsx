@@ -24,6 +24,7 @@ interface VendaData {
   linkGoogle: string;
   numeroResidencial: string;
       linkAddAssinatura: string;
+  operador: string;
 data: string;
   horarios?: { [dia: string]: string };
 }
@@ -145,7 +146,15 @@ export const EditEmpresa: React.FC<EditEmpresaFormProps> = ({
         name="linkAddAssinatura"
         value={form.linkAddAssinatura}
         onChange={handleInputChange}
-        placeholder="Insira o nome fantasia"
+        placeholder="Insira o link da assinatura"
+      />
+      <InputField
+        id="operador"
+        label="Nome do Operador"
+        name="operador"
+        value={form.operador}
+        onChange={handleInputChange}
+        placeholder="Insira o nome do operador"
       />
       <div className="form-group mb-3 col-md-4">
         <label htmlFor="data">Data da Venda (dd/mm/aaaa)</label>

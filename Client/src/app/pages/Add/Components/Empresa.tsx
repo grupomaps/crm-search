@@ -283,6 +283,18 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
         />
       </div>
       <div className="form-group mb-3 col-md-6">
+        <label htmlFor="nomeFantasia">Nome do Operador</label>
+        <input
+          type="text"
+          className="form-control"
+          id="operador"
+          name="operador"
+          value={form.operador}
+          onChange={handleInputChange}
+          placeholder="Insira o nome do operador"
+        />
+      </div>
+      <div className="form-group mb-3 col-md-6">
         <label htmlFor="nomeFantasia">CNPJ</label>
         <input
           type="text"
