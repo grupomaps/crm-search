@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import ListaDeParcelas from "./ListaDeParcelas";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../../../firebase/firebaseConfig";
 
 interface ParcelaDetalhada {
   valor: string;
@@ -20,6 +22,12 @@ interface Form {
   comprovante: string;
   parcelasDetalhadas?: ParcelaDetalhada[];
   linkBoleto?: string;
+}
+
+interface Usuario {
+  id: string;
+  nome: string;
+  cargo: string;
 }
 
 interface FinanceiroFormProps {
@@ -43,6 +51,7 @@ export const FinanceiroForm: React.FC<FinanceiroFormProps> = ({
   });
 
   const [parcelas, setParcelas] = useState<ParcelaDetalhada[]>([]);
+  const [usuariosCobranca, setUsuariosCobranca] = useState<Usuario[]>([]);
   const [isValorPagoManuallyEdited, setIsValorPagoManuallyEdited] =
     useState(false);
   const handleParcelaChange = (
@@ -50,7 +59,6 @@ export const FinanceiroForm: React.FC<FinanceiroFormProps> = ({
     field: "valorPago" | "dataPagamento" | "link",
     value: string
   ) => {
-
     const updatedParcelas = (parcelas ?? []).map((parcela, i) =>
       i === index ? { ...parcela, [field]: value } : parcela
     );
@@ -77,7 +85,24 @@ export const FinanceiroForm: React.FC<FinanceiroFormProps> = ({
       setParcelas([]); // ← garante array vazio se não houver parcelas
     }
   }, [initialForm]);
-  
+
+  useEffect(() => {
+    const fetchUsuariosCobranca = async () => {
+      try {
+        const usuariosCollection = collection(db, "usuarios");
+        const usuariosSnapshot = await getDocs(usuariosCollection);
+        const usuariosList = usuariosSnapshot.docs
+          .map((doc) => ({ id: doc.id, ...doc.data() }))
+          .filter((usuario: any) => usuario.cargo === "cobranca");
+
+        setUsuariosCobranca(usuariosList as Usuario[]);
+      } catch (error) {
+        console.error("Erro ao buscar usuários de cobrança:", error);
+      }
+    };
+
+    fetchUsuariosCobranca();
+  }, []);
 
   useEffect(() => {
     if (!isValorPagoManuallyEdited) {
@@ -193,9 +218,7 @@ export const FinanceiroForm: React.FC<FinanceiroFormProps> = ({
     }
   }, [initialForm]);
 
-
-  
-  console.log(parcelas)
+  console.log(parcelas);
   return (
     <div className="row gx-4 gy-4">
       <div className="col-12 col-lg-6">
@@ -278,9 +301,12 @@ export const FinanceiroForm: React.FC<FinanceiroFormProps> = ({
                 onChange={handleInputChange}
                 required
               >
-                <option value="">Selecione uma opção</option>
-                <option value="sim">Sim</option>
-                <option value="nao">Não</option>
+                <option value="">Selecione um usuário</option>
+                {usuariosCobranca.map((usuario) => (
+                  <option key={usuario.id} value={usuario.id}>
+                    {usuario.nome}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -299,14 +325,16 @@ export const FinanceiroForm: React.FC<FinanceiroFormProps> = ({
           </form>
         </div>
       </div>
-
+{
+  
+}
       <div className="col-12 col-lg-6">
-      {parcelas.length > 0 && (
-  <ListaDeParcelas
-    parcelas={parcelas}
-    handleParcelaChange={handleParcelaChange}
-  />
-)}
+        {parcelas.length > 0 && (
+          <ListaDeParcelas
+            parcelas={parcelas}
+            handleParcelaChange={handleParcelaChange}
+          />
+        )}
       </div>
     </div>
   );

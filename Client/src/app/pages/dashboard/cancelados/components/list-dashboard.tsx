@@ -14,13 +14,10 @@ import {
   faMoneyCheckDollar,
   faBan,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ModalExcel } from "./modalExcel";
 import { db } from "../../../../firebase/firebaseConfig";
-import {
-  collection,
-  getDocs,
-} from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import * as XLSX from "xlsx";
 import { Tooltip } from "react-tooltip";
@@ -62,7 +59,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
     dueDate: "",
     saleType: "",
     salesPerson: "",
-    saleGroup: ""
+    saleGroup: "",
   });
   const [activeSearchTerm, setActiveSearchTerm] = useState<string>("");
 
@@ -71,7 +68,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
   console.log("User ID:", userId);
   const adminUserId = process.env.REACT_APP_ADMIN_USER_ID;
   const SupervisorUserId = "FHmqVEMMw3dZCTGO6Pml6oebZxQ2";
-  const graziId ="FHmqVEMMw3dZCTGO6Pml6oebZxQ2"
+  const graziId = "FHmqVEMMw3dZCTGO6Pml6oebZxQ2";
   useEffect(() => {
     const fetchCancelados = async () => {
       setLoading(true);
@@ -84,9 +81,13 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
         })) as Cancelado[];
 
         const filteredCancelados =
-          userId === adminUserId || userId === SupervisorUserId || userId === graziId
+          userId === adminUserId ||
+          userId === SupervisorUserId ||
+          userId === graziId
             ? canceladosList
-            : canceladosList.filter((cancelado) => cancelado.createdBy === userId);
+            : canceladosList.filter(
+                (cancelado) => cancelado.createdBy === userId
+              );
 
         setCancelados(filteredCancelados);
         setTotalCancelados(filteredCancelados.length);
@@ -141,16 +142,23 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
     const filteredClients = cancelados.filter((cancelado) => {
       const lowerCaseTerm = activeSearchTerm.toLowerCase();
       const matchesSearchTerm =
-        (cancelado.cnpj && cancelado.cnpj.toLowerCase().includes(lowerCaseTerm)) ||
-        (cancelado.cpf && cancelado.cpf.toLowerCase().includes(lowerCaseTerm)) ||
+        (cancelado.cnpj &&
+          cancelado.cnpj.toLowerCase().includes(lowerCaseTerm)) ||
+        (cancelado.cpf &&
+          cancelado.cpf.toLowerCase().includes(lowerCaseTerm)) ||
         (cancelado.responsavel &&
           cancelado.responsavel.toLowerCase().includes(lowerCaseTerm)) ||
-        (cancelado.email1 && cancelado.email1.toLowerCase().includes(lowerCaseTerm)) ||
-        (cancelado.email2 && cancelado.email2.toLowerCase().includes(lowerCaseTerm)) ||
-        (cancelado.operador && cancelado.operador.toLowerCase().includes(lowerCaseTerm));
-        (cancelado.account && cancelado.account.toLowerCase().includes(lowerCaseTerm));
+        (cancelado.email1 &&
+          cancelado.email1.toLowerCase().includes(lowerCaseTerm)) ||
+        (cancelado.email2 &&
+          cancelado.email2.toLowerCase().includes(lowerCaseTerm)) ||
+        (cancelado.operador &&
+          cancelado.operador.toLowerCase().includes(lowerCaseTerm));
+      cancelado.account &&
+        cancelado.account.toLowerCase().includes(lowerCaseTerm);
 
-      const { startDate, endDate, dueDate, saleType, salesPerson, saleGroup } = filters;
+      const { startDate, endDate, dueDate, saleType, salesPerson, saleGroup } =
+        filters;
 
       const vendaData = new Date(cancelado.data);
       const isStartDateValid = startDate
@@ -165,19 +173,23 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
       const vendaDataVencimento = new Date(cancelado.dataVencimento);
       const isDueDateValid = dueDate
         ? vendaDataVencimento.toDateString() ===
-        new Date(dueDate).toDateString()
+          new Date(dueDate).toDateString()
         : true;
 
       const isSaleTypeValid = saleType ? cancelado.contrato === saleType : true;
-      const isSalesPersonValid = salesPerson ? cancelado.operador === salesPerson : true;
+      const isSalesPersonValid = salesPerson
+        ? cancelado.operador === salesPerson
+        : true;
 
-      const isGroupTypeValid = saleGroup ? cancelado.account === saleGroup : true;
+      const isGroupTypeValid = saleGroup
+        ? cancelado.account === saleGroup
+        : true;
       return (
         matchesSearchTerm &&
         isDateInRange &&
         isDueDateValid &&
         isSaleTypeValid &&
-        isSalesPersonValid && 
+        isSalesPersonValid &&
         isGroupTypeValid
       );
     });
@@ -208,6 +220,18 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
 
   const openModalExclusao = () => setModalExclusao(true);
   const closeModalExclusao = () => setModalExclusao(false);
+
+
+  const deletarCancelados = async (ids: string[]) => {
+    try {
+      const promises = ids.map((id) => deleteDoc(doc(db, "cancelados", id)));
+      await Promise.all(promises);
+      console.log("Itens removidos com sucesso!");
+      window.location.reload();
+    } catch (error) {
+      console.error("Erro ao excluir:", error);
+    }
+  };
 
   const handleApplyFilters = (newFilters: any) => {
     setFilters(newFilters);
@@ -289,20 +313,36 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
         <div className="modal-overlay">
           <div className="modal-exclusao">
             <div className="modal-header">
-              <h2>Excluir Item</h2>
-              <button className="close-btn" onClick={() => setModalExclusao(false)}>&#10006;</button>
+              <h2>Excluir Itens</h2>
+              <button
+                className="close-btn"
+                onClick={() => setModalExclusao(false)}
+              >
+                &#10006;
+              </button>
             </div>
             <div className="modal-body">
-              <p>Tem certeza de que deseja excluir este item?</p>
+              <p>
+                Tem certeza de que deseja excluir {selectedItems.size} item(s)?
+              </p>
             </div>
             <div className="modal-footer">
-            <button className="planilha-btn" onClick={() => {closeModalExclusao(); }}>Confirmar</button>
-              <button className="remove-btn" onClick={closeModalExclusao}>Cancelar</button>
+              <button
+                className="planilha-btn"
+                onClick={() => {
+                  deletarCancelados(Array.from(selectedItems));
+                  setModalExclusao(false); // fecha modal depois
+                }}
+              >
+                Confirmar
+              </button>
+              <button className="remove-btn" onClick={closeModalExclusao}>
+                Cancelar
+              </button>
             </div>
           </div>
         </div>
       )}
-
 
       <div className="header-list">
         <div className="header-content">
@@ -328,7 +368,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
               className="search-input"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleSearchClick()} 
+              onKeyPress={(e) => e.key === "Enter" && handleSearchClick()}
             />
           </div>
 
@@ -343,24 +383,33 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
             </Link> */}
 
             {userId === adminUserId && (
-              <button onClick={openModalExclusao} className="remove-btn" data-tooltip-id="remove-tooltip"
-                data-tooltip-content="Remover selecionados">
-                <FontAwesomeIcon
-                  icon={faTrashAlt}
-
+              <button
+                onClick={openModalExclusao}
+                className="remove-btn"
+                data-tooltip-id="remove-tooltip"
+                data-tooltip-content="Remover selecionados"
+              >
+                <FontAwesomeIcon icon={faTrashAlt} />
+                <Tooltip
+                  id="remove-tooltip"
+                  place="top"
+                  className="custom-tooltip"
                 />
-                <Tooltip id="remove-tooltip" place="top" className="custom-tooltip" />
               </button>
             )}
 
-            <button className="filtros-btn" onClick={openModalExcel} data-tooltip-id="filter-tooltip"
-              data-tooltip-content="Aplicar filtros">
-              <FontAwesomeIcon
-                icon={faFilter}
-                color="#fff"
-
+            <button
+              className="filtros-btn"
+              onClick={openModalExcel}
+              data-tooltip-id="filter-tooltip"
+              data-tooltip-content="Aplicar filtros"
+            >
+              <FontAwesomeIcon icon={faFilter} color="#fff" />
+              <Tooltip
+                id="filter-tooltip"
+                place="top"
+                className="custom-tooltip"
               />
-              <Tooltip id="filter-tooltip" place="top" className="custom-tooltip" />
             </button>
 
             <button
@@ -370,7 +419,11 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
               data-tooltip-content="Baixar planilha"
             >
               <FontAwesomeIcon icon={faDownload} color="#fff" />
-              <Tooltip id="download-tooltip" place="top" className="custom-tooltip" />
+              <Tooltip
+                id="download-tooltip"
+                place="top"
+                className="custom-tooltip"
+              />
             </button>
           </div>
         </div>
@@ -399,7 +452,11 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
             <tbody>
               {currentClients.map((cancelado: Cancelado) => (
                 <tr key={cancelado.id}>
-                  <td className={selectedItems.has(cancelado.id) ? "selected" : ""}>
+                  <td
+                    className={
+                      selectedItems.has(cancelado.id) ? "selected" : ""
+                    }
+                  >
                     <input
                       type="checkbox"
                       checked={selectedItems.has(cancelado.id)}
@@ -407,36 +464,59 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                       className="checkbox-table"
                     />
                   </td>
-                  <td className={selectedItems.has(cancelado.id) ? "selected" : ""}>
+                  <td
+                    className={
+                      selectedItems.has(cancelado.id) ? "selected" : ""
+                    }
+                  >
                     {cancelado.cnpj
                       ? formatCNPJ(cancelado.cnpj)
                       : cancelado.cpf
-                        ? formatCPF(cancelado.cpf)
-                        : cancelado.cnpj || cancelado.cpf}
+                      ? formatCPF(cancelado.cpf)
+                      : cancelado.cnpj || cancelado.cpf}
                   </td>
-                  <td className={selectedItems.has(cancelado.id) ? "selected" : ""}>
+                  <td
+                    className={
+                      selectedItems.has(cancelado.id) ? "selected" : ""
+                    }
+                  >
                     {cancelado.responsavel}
                   </td>
-                  <td className={selectedItems.has(cancelado.id) ? "selected" : ""}>
+                  <td
+                    className={
+                      selectedItems.has(cancelado.id) ? "selected" : ""
+                    }
+                  >
                     {cancelado.email1}
                   </td>
-                  <td className={selectedItems.has(cancelado.id) ? "selected" : ""}>
+                  <td
+                    className={
+                      selectedItems.has(cancelado.id) ? "selected" : ""
+                    }
+                  >
                     {cancelado.operador.replace(/\./g, " ")}
                   </td>
-                  <td className={selectedItems.has(cancelado.id) ? "selected" : ""}>
+                  <td
+                    className={
+                      selectedItems.has(cancelado.id) ? "selected" : ""
+                    }
+                  >
                     {cancelado.account}
                   </td>
 
                   <td className="icon-container">
-                    
-                  <Link to={`/contrato/${cancelado.id}`}>
+                    <Link to={`/contrato/${cancelado.id}`}>
                       <FontAwesomeIcon
                         icon={faEye}
                         className="icon-spacing text-dark"
                         data-tooltip-id="tooltip-contrato"
                         data-tooltip-content="Visualizar contrato"
                       />
-                      <Tooltip id="tooltip-contrato" place="top" className="custom-tooltip" />
+                      <Tooltip
+                        id="tooltip-contrato"
+                        place="top"
+                        className="custom-tooltip"
+                      />
                     </Link>
 
                     <Link to={`/comprovantes/${cancelado.id}`}>
@@ -446,7 +526,11 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                         data-tooltip-id="tooltip-comprovantes"
                         data-tooltip-content="Ver comprovantes"
                       />
-                      <Tooltip id="tooltip-comprovantes" place="top" className="custom-tooltip" />
+                      <Tooltip
+                        id="tooltip-comprovantes"
+                        place="top"
+                        className="custom-tooltip"
+                      />
                     </Link>
 
                     <Link to={`/fichacancelamento/${cancelado.id}`}>
@@ -456,10 +540,13 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                         data-tooltip-id="tooltip-comprovantes"
                         data-tooltip-content="Ver relato"
                       />
-                      <Tooltip id="tooltip-comprovantes" place="top" className="custom-tooltip" />
+                      <Tooltip
+                        id="tooltip-comprovantes"
+                        place="top"
+                        className="custom-tooltip"
+                      />
                     </Link>
                   </td>
-
                 </tr>
               ))}
             </tbody>

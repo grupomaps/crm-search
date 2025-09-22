@@ -83,19 +83,19 @@
 .colocacao1 {
   height: 280px;
   order: 2;
-  background-color: #2f971a;
+  background-color: #eabd2b;
 }
 
 .colocacao2 {
   height: 220px;
-  background-color: #e7bd00;
+  background-color: #e45d3f;
   order: 3;
 }
 
 .colocacao3 {
   height: 160px;
   order: 1;
-  background-color: #c71010;
+  background-color: #781d92;
 }
 
 .tabela-ranking {

@@ -24,6 +24,10 @@ import {
   doc,
   writeBatch,
   addDoc,
+  query,
+  where,
+  getDoc,
+  setDoc,
 } from "firebase/firestore";
 import { toast, ToastContainer } from "react-toastify";
 import * as XLSX from "xlsx";
@@ -112,45 +116,71 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
   const [showNegativos, setShowNegativos] = useState(false);
 
   useEffect(() => {
-    const fetchFinanceiros = async () => {
-      setLoading(true);
-      try {
-        const financeirosCollection = collection(db, "financeiros");
-        const financeirosSnapshot = await getDocs(financeirosCollection);
-        const financeirosList = financeirosSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Marketing[];
+  const fetchFinanceiros = async () => {
+    setLoading(true);
+    try {
+      // 1. Buscar vendas com pós-venda concluída
+      const vendasQuery = query(
+        collection(db, "vendas"),
+        where("posVendaConcuida", "==", true)
+      );
+      const vendasSnapshot = await getDocs(vendasQuery);
 
-        setFinanceiros(financeirosList);
-        setTotalFinanceiros(financeirosList.length);
+      // 2. Inserir cada venda na coleção "financeiros" (se já não existir)
+      for (const docSnap of vendasSnapshot.docs) {
+        const vendaData = docSnap.data();
 
-        const totalPagos = financeirosList.filter(
-          (financeiro) => financeiro.rePagamento === "sim"
-        ).length;
-        setTotalPagos(totalPagos);
-        const totalNegativados = financeirosList.filter(
-          (financeiro) => financeiro.rePagamento === "nao"
-        ).length;
-        setTotalNegativados(totalNegativados);
-        const totalCancelados = financeirosList.filter(
-          (financeiro) => financeiro.rePagamento === "cancelado"
-        ).length;
-        setTotalCancelados(totalCancelados);
-      } catch (error) {
-        console.error("Erro ao buscar financeiros:", error);
-      } finally {
-        setLoading(false);
+        const financeiroRef = doc(db, "financeiros", docSnap.id); 
+        const financeiroDoc = await getDoc(financeiroRef);
+
+        if (!financeiroDoc.exists()) {
+          await setDoc(financeiroRef, {
+            ...vendaData,
+            createdAt: new Date(), // opcional
+          });
+        }
       }
-    };
 
-    fetchFinanceiros();
-  }, [
-    setTotalFinanceiros,
-    setTotalPagos,
-    setTotalNegativados,
-    setTotalCancelados,
-  ]);
+      // 3. Buscar todos os financeiros
+      const financeirosCollection = collection(db, "financeiros");
+      const financeirosSnapshot = await getDocs(financeirosCollection);
+      const financeirosList = financeirosSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as any[];
+
+      setFinanceiros(financeirosList);
+      setTotalFinanceiros(financeirosList.length);
+
+      const totalPagos = financeirosList.filter(
+        (financeiro) => financeiro.rePagamento === "sim"
+      ).length;
+      setTotalPagos(totalPagos);
+
+      const totalNegativados = financeirosList.filter(
+        (financeiro) => financeiro.rePagamento === "nao"
+      ).length;
+      setTotalNegativados(totalNegativados);
+
+      const totalCancelados = financeirosList.filter(
+        (financeiro) => financeiro.rePagamento === "cancelado"
+      ).length;
+      setTotalCancelados(totalCancelados);
+
+    } catch (error) {
+      console.error("Erro ao buscar financeiros:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchFinanceiros();
+}, [
+  setTotalFinanceiros,
+  setTotalPagos,
+  setTotalNegativados,
+  setTotalCancelados,
+]);
 
   const handleSyncClients = async () => {
     setSyncLoading(true);

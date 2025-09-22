@@ -15,6 +15,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { Tooltip } from "react-tooltip";
 
 interface Financeiro {
+  usuarioId: any;
   id: string;
   cnpj: string;
   cpf: string;
@@ -57,31 +58,52 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
   const [activeSearchTerm, setActiveSearchTerm] = useState<string>("");
 
   useEffect(() => {
-    const fetchFinanceiros = async () => {
-      setLoading(true);
-      try {
-        const financeirosCollection = collection(db, "financeiros");
-        const financeirosSnapshot = await getDocs(financeirosCollection);
-        const financeirosList = financeirosSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Financeiro[];
+  const fetchFinanceiros = async () => {
+    setLoading(true);
+    try {
+      // 1) Buscar usuários com cargo == "cobranca"
+      const usuariosCollection = collection(db, "usuarios");
+      const usuariosSnapshot = await getDocs(usuariosCollection);
+      const usuariosCobranca = usuariosSnapshot.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() }))
+        .filter((usuario: any) => usuario.cargo === "cobranca");
 
-        setFinanceiros(financeirosList);
-        // Define o total de clientes que têm encaminharCliente igual a "sim"
-        const totalFinanceiros = financeirosList.filter(
-          (financeiro) => financeiro.encaminharCliente === "sim"
+      // 2) Buscar todos os financeiros
+      const financeirosCollection = collection(db, "financeiros");
+      const financeirosSnapshot = await getDocs(financeirosCollection);
+      const financeirosList = financeirosSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Financeiro[];
+
+      setFinanceiros(financeirosList);
+
+      // 3) Criar contagem de financeiros por usuário de cobrança
+      const totaisPorUsuario: Record<string, number> = {};
+
+      usuariosCobranca.forEach((usuario: any) => {
+        totaisPorUsuario[usuario.id] = financeirosList.filter(
+          (financeiro) => financeiro.usuarioId === usuario.id 
         ).length;
-        setTotalFinanceiros(totalFinanceiros);
-      } catch (error) {
-        console.error("Erro ao buscar financeiros:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      });
 
-    fetchFinanceiros();
-  }, [setTotalFinanceiros]);
+      // Exemplo: se quiser a soma de todos
+      const totalFinanceiros = Object.values(totaisPorUsuario).reduce(
+        (acc, val) => acc + val,
+        0
+      );
+
+      setTotalFinanceiros(totalFinanceiros);
+    } catch (error) {
+      console.error("Erro ao buscar financeiros:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchFinanceiros();
+}, [setTotalFinanceiros]);
+
 
   // const handleCheckboxChange = (id: string) => {
   //   setSelectedItems((prevSelectedItems) => {
