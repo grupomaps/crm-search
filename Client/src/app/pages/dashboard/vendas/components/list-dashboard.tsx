@@ -48,6 +48,8 @@ interface Venda {
   whatsapp: string;
   infoCancelamento: string;
   respCancelamento: string;
+  observacoes: string;
+  
 }
 
 interface ListDashboardProps {
@@ -511,9 +513,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
               <tr>
                 <th></th>
                 <th>CNPJ/CPF</th>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Whatsapp</th>
+                <th>Observações</th>
                 <th>Operador</th>
                 <th></th>
               </tr>
@@ -537,13 +537,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                       : venda.cnpj || venda.cpf}
                   </td>
                   <td className={selectedItems.has(venda.id) ? "selected" : ""}>
-                    {venda.responsavel}
-                  </td>
-                  <td className={selectedItems.has(venda.id) ? "selected" : ""}>
-                    {venda.email1}
-                  </td>
-                  <td className={selectedItems.has(venda.id) ? "selected" : ""}>
-                    {formatarTelefone(venda.whatsapp)}
+                    {venda.observacoes}
                   </td>
                   <td className={selectedItems.has(venda.id) ? "selected" : ""}>
                     {venda.operador.replace(/\./g, " ")}

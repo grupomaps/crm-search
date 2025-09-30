@@ -52,6 +52,7 @@ interface PosVenda {
   monitoriaConcluidaYes: boolean;
   servicosConcluidos: boolean;
   createdBy: string;
+  observacoes: string;
 }
 
 interface venda {
@@ -453,8 +454,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
               <tr>
                 <th></th>
                 <th>CNPJ</th>
-                <th>Nome</th>
-                <th>Email</th>
+                <th>Observações</th>
                 <th>Operador</th>
                 <th>Operador Pós Venda</th>
                 <th></th>
@@ -493,16 +493,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                       posVenda.posVendaConcuida ? "servicos-realizados" : ""
                     }`}
                   >
-                    {posVenda.responsavel}
-                  </td>
-                  <td
-                    className={`${
-                      selectedItems.has(posVenda.id) ? "selected" : ""
-                    } ${
-                      posVenda.posVendaConcuida ? "servicos-realizados" : ""
-                    }`}
-                  >
-                    {posVenda.email1 || posVenda.email2}
+                    {posVenda.observacoes}
                   </td>
                   <td
                     className={`${

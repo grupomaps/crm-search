@@ -30,6 +30,8 @@ interface Venda {
   dataVencimento: string;
   contrato: string;
   nomeMonitor: string;
+  observacoes: string;
+
   monitoriaConcluidaYes: boolean;
   createdBy: string;
 }
@@ -311,8 +313,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
               <tr>
                 <th></th>
                 <th>CNPJ/CPF</th>
-                <th>Nome</th>
-                <th>Email</th>
+                <th>Observações</th>
                 <th>Operador</th>
                 <th>Monitor</th>
                 <th></th>
@@ -338,14 +339,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                       selectedItems.has(venda.id) ? "selected" : ""
                     } ${venda.monitoriaConcluidaYes ? "concluida" : ""}`}
                   >
-                    {venda.responsavel}
-                  </td>
-                  <td
-                    className={`${
-                      selectedItems.has(venda.id) ? "selected" : ""
-                    } ${venda.monitoriaConcluidaYes ? "concluida" : ""}`}
-                  >
-                    {venda.email1}
+                    {venda.observacoes}
                   </td>
                   <td
                     className={`${

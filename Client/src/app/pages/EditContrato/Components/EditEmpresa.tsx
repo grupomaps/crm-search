@@ -149,6 +149,14 @@ export const EditEmpresa: React.FC<EditEmpresaFormProps> = ({
         placeholder="Insira o link da assinatura"
       />
       <InputField
+        id="observacoes"
+        label="Observações"
+        name="observacoes"
+        value={form.observacoes}
+        onChange={handleInputChange}
+        placeholder="Insira as Observações"
+      />
+      <InputField
         id="operador"
         label="Nome do Operador"
         name="operador"

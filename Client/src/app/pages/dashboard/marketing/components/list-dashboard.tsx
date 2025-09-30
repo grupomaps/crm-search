@@ -56,6 +56,7 @@ interface Marketing {
   qrCode: false;
   anuncioPatrocinado: false;
   postagemRede: false;
+  observacoes: string;
 }
 
 interface venda {
@@ -72,6 +73,7 @@ interface venda {
   monitoriaConcluidaYes: boolean;
   servicosConcluidos: boolean;
   posVendaConcuida: boolean;
+  observacoes: string;
 }
 
 interface ListDashboardProps {
@@ -604,8 +606,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
               <tr>
                 <th></th>
                 <th>CNPJ</th>
-                <th>Nome</th>
-                <th>Email</th>
+                <th>Observações</th>
                 <th>Operador</th>
                 <th>Monitor</th>
                 <th></th>
@@ -655,7 +656,7 @@ ${checklistSemConclusao ? "servicos-incompletos" : ""}
 ${checklistSemConclusao ? "servicos-incompletos" : ""}
 `}
                     >
-                      {marketing.responsavel}
+                      {marketing.observacoes}
                     </td>
                     <td
                       className={`${

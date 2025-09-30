@@ -331,6 +331,18 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
           placeholder="Insira o Link da Assinatura"
         />
       </div>
+      <div className="form-group mb-3 col-md-6">
+        <label htmlFor="nomeFantasia">Observações</label>
+        <input
+          type="text"
+          className="form-control"
+          id="observacoes"
+          name="observacoes"
+          value={form.observacoes}
+          onChange={handleInputChange}
+          placeholder="Insira as Observações"
+        />
+      </div>
 {/* 
       <div className="form-group mb-3 col-md-4">
         <label htmlFor="nomeFantasia">Nome Fantasia</label>

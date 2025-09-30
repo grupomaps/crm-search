@@ -56,8 +56,10 @@ interface Marketing {
   rePagamento: string;
   account: string;
   parcelasDetalhadas?: Parcela[]; // Adicione esta linha
+  observacoes: string;
   posVendaConcuida: boolean;
 }
+
 
 interface Sale {
   id: string;
@@ -79,6 +81,7 @@ interface Sale {
   valorPago: string;
   parcelasDetalhadas?: Parcela[];
   posVendaConcuida: boolean;
+  observacoes: string;
 }
 
 interface ListDashboardProps {
@@ -577,8 +580,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
               <tr>
                 <th></th>
                 <th>CNPJ/CPF</th>
-                <th>Nome</th>
-                <th>Email</th>
+                <th>Observações</th>
                 <th>Equipe</th>
                 <th>Operador</th>
                 <th></th>
@@ -621,18 +623,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                         : ""
                     }`}
                   >
-                    {marketing.responsavel}
-                  </td>
-                  <td
-                    className={`${
-                      selectedItems.has(marketing.id) ? "selected" : ""
-                    } ${
-                      marketing.encaminharCliente === "sim"
-                        ? "cobranca-encaminhado"
-                        : ""
-                    }`}
-                  >
-                    {marketing.email1 || marketing.email2}
+                    {marketing.observacoes}
                   </td>
                   <td
                     className={`${

@@ -144,9 +144,12 @@ export const FinanceiroForm: React.FC<FinanceiroFormProps> = ({
     });
   };
 
-  const parseToPureNumber = (value: string): string => {
-    return value.replace(/\D/g, "") || "0";
-  };
+  const parseToPureNumber = (value?: string | null): string => {
+  if (!value) return "0"; 
+  const numericValue = value.replace(/\D/g, ""); 
+  return numericValue === "" ? "0" : numericValue; 
+};
+
 
   const handleValorPagoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;

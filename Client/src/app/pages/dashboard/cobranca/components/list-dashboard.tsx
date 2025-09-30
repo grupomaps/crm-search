@@ -32,6 +32,7 @@ interface Financeiro {
   monitoriaConcluidaYes: boolean;
   servicosConcluidos: boolean;
   encaminharCliente: string;
+  observacoes: string; 
 }
 
 interface ListDashboardProps {
@@ -57,8 +58,10 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
     cobPerson: "",
   });
   const [activeSearchTerm, setActiveSearchTerm] = useState<string>("");
-const user = auth.currentUser; // ou pegue do estado
-const uid = user?.uid;
+  const user = auth.currentUser;
+  const uid = user?.uid;
+  const admUser = process.env.REACT_APP_ADMIN_USER_ID;
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setLoading(true);
@@ -70,20 +73,29 @@ const uid = user?.uid;
         setLoading(false);
         return;
       }
+
       const uid = user.uid;
 
       try {
-        // Buscar usuários de cobrança
         const usuariosCollection = collection(db, "usuarios");
         const usuariosSnapshot = await getDocs(usuariosCollection);
         const usuariosCobranca = usuariosSnapshot.docs
           .map((doc) => ({ id: doc.id, ...doc.data() }))
           .filter((usuario: any) => usuario.cargo === "cobranca");
 
+        console.log("Usuários de cobrança:", usuariosCobranca);
+
         const usuarioAtual = usuariosCobranca.find((u) => u.id === uid);
         const isCobranca = !!usuarioAtual;
 
-        // Buscar financeiros
+        const usuarioLogadoSnapshot = await getDocs(collection(db, "usuarios"));
+        const usuarioLogado = usuarioLogadoSnapshot.docs
+          .map((doc) => ({ id: doc.id, ...(doc.data() as { cargo?: string }) }))
+          .find((u) => u.id === uid);
+        const isAdmin = usuarioLogado?.cargo === "adm";
+
+        console.log("É cobrança?", isCobranca, "É admin?", isAdmin);
+
         const financeirosCollection = collection(db, "financeiros");
         const financeirosSnapshot = await getDocs(financeirosCollection);
         let financeirosList = financeirosSnapshot.docs.map((doc) => ({
@@ -91,28 +103,26 @@ const uid = user?.uid;
           ...doc.data(),
         })) as Financeiro[];
 
-        // Filtra apenas os do usuário de cobrança
-        if (isCobranca) {
-          financeirosList.forEach((f) => {
-            console.log(
-              "Comparando:",
-              `encaminharCliente="${f.encaminharCliente}"`,
-              `uid="${uid}"`,
-              f.encaminharCliente === uid
-            );
-          });
-
+        if (
+          usuarioLogado?.cargo === "cobranca" ||
+          usuarioLogado?.cargo === "vendas"
+        ) {
           financeirosList = financeirosList.filter(
             (financeiro) => financeiro.encaminharCliente === uid
           );
         }
 
+        console.log("Financeiros após filtro:", financeirosList);
+
         setFinanceiros(financeirosList);
+
         const totaisPorUsuario: Record<string, number> = {};
         usuariosCobranca.forEach((usuario: any) => {
-          totaisPorUsuario[usuario.id] = financeirosList.filter(
-            (financeiro) => financeiro.encaminharCliente === usuario.id
-          ).length;
+          totaisPorUsuario[usuario.id] = financeirosSnapshot.docs
+            .map((doc) => ({ id: doc.id, ...doc.data() }))
+            .filter(
+              (financeiro: any) => financeiro.encaminharCliente === usuario.id
+            ).length;
         });
 
         console.log("Totais por usuário:", totaisPorUsuario);
@@ -122,6 +132,7 @@ const uid = user?.uid;
           0
         );
         console.log("Total financeiros:", totalFinanceiros);
+
         setTotalFinanceiros(totalFinanceiros);
       } catch (error) {
         console.error("Erro ao buscar financeiros:", error);
@@ -193,10 +204,8 @@ const uid = user?.uid;
           financeiro.operadorSelecionado.value === cobPerson
         : true;
 
-      // Verifique se encaminharCliente é "sim"
-      const isEncaminharClienteValid = uid
-  ? financeiro.encaminharCliente === uid
-  : true;
+      const isEncaminharClienteValid = admUser || financeiro.encaminharCliente === uid;
+
 
       return (
         matchesSearchTerm &&
@@ -319,8 +328,7 @@ const uid = user?.uid;
               <tr>
                 <th></th>
                 <th>CNPJ/CPF</th>
-                <th>Nome</th>
-                <th>Email</th>
+                <th>Observações</th>
                 <th>Operador</th>
                 <th>Cobrador</th>
                 <th></th>
@@ -341,19 +349,13 @@ const uid = user?.uid;
                       ? formatCPF(financeiro.cpf)
                       : financeiro.cnpj || financeiro.cpf}
                   </td>
+                  
                   <td
                     className={`${
                       selectedItems.has(financeiro.id) ? "selected" : ""
                     }`}
                   >
-                    {financeiro.responsavel}
-                  </td>
-                  <td
-                    className={`${
-                      selectedItems.has(financeiro.id) ? "selected" : ""
-                    }`}
-                  >
-                    {financeiro.email1 || financeiro.email2}
+                    {financeiro.observacoes}
                   </td>
                   <td
                     className={`${
