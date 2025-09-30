@@ -13,7 +13,8 @@ import { ModalExcel } from "./modalExcel";
 import { db } from "../../../../firebase/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { Tooltip } from "react-tooltip";
-
+import { auth } from "../../../../firebase/firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
 interface Financeiro {
   usuarioId: any;
   id: string;
@@ -56,54 +57,81 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
     cobPerson: "",
   });
   const [activeSearchTerm, setActiveSearchTerm] = useState<string>("");
-
+const user = auth.currentUser; // ou pegue do estado
+const uid = user?.uid;
   useEffect(() => {
-  const fetchFinanceiros = async () => {
-    setLoading(true);
-    try {
-      // 1) Buscar usuários com cargo == "cobranca"
-      const usuariosCollection = collection(db, "usuarios");
-      const usuariosSnapshot = await getDocs(usuariosCollection);
-      const usuariosCobranca = usuariosSnapshot.docs
-        .map((doc) => ({ id: doc.id, ...doc.data() }))
-        .filter((usuario: any) => usuario.cargo === "cobranca");
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setLoading(true);
 
-      // 2) Buscar todos os financeiros
-      const financeirosCollection = collection(db, "financeiros");
-      const financeirosSnapshot = await getDocs(financeirosCollection);
-      const financeirosList = financeirosSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Financeiro[];
+      if (!user) {
+        console.log("Nenhum usuário logado");
+        setFinanceiros([]);
+        setTotalFinanceiros(0);
+        setLoading(false);
+        return;
+      }
+      const uid = user.uid;
 
-      setFinanceiros(financeirosList);
+      try {
+        // Buscar usuários de cobrança
+        const usuariosCollection = collection(db, "usuarios");
+        const usuariosSnapshot = await getDocs(usuariosCollection);
+        const usuariosCobranca = usuariosSnapshot.docs
+          .map((doc) => ({ id: doc.id, ...doc.data() }))
+          .filter((usuario: any) => usuario.cargo === "cobranca");
 
-      // 3) Criar contagem de financeiros por usuário de cobrança
-      const totaisPorUsuario: Record<string, number> = {};
+        const usuarioAtual = usuariosCobranca.find((u) => u.id === uid);
+        const isCobranca = !!usuarioAtual;
 
-      usuariosCobranca.forEach((usuario: any) => {
-        totaisPorUsuario[usuario.id] = financeirosList.filter(
-          (financeiro) => financeiro.usuarioId === usuario.id 
-        ).length;
-      });
+        // Buscar financeiros
+        const financeirosCollection = collection(db, "financeiros");
+        const financeirosSnapshot = await getDocs(financeirosCollection);
+        let financeirosList = financeirosSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Financeiro[];
 
-      // Exemplo: se quiser a soma de todos
-      const totalFinanceiros = Object.values(totaisPorUsuario).reduce(
-        (acc, val) => acc + val,
-        0
-      );
+        // Filtra apenas os do usuário de cobrança
+        if (isCobranca) {
+          financeirosList.forEach((f) => {
+            console.log(
+              "Comparando:",
+              `encaminharCliente="${f.encaminharCliente}"`,
+              `uid="${uid}"`,
+              f.encaminharCliente === uid
+            );
+          });
 
-      setTotalFinanceiros(totalFinanceiros);
-    } catch (error) {
-      console.error("Erro ao buscar financeiros:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+          financeirosList = financeirosList.filter(
+            (financeiro) => financeiro.encaminharCliente === uid
+          );
+        }
 
-  fetchFinanceiros();
-}, [setTotalFinanceiros]);
+        setFinanceiros(financeirosList);
+        const totaisPorUsuario: Record<string, number> = {};
+        usuariosCobranca.forEach((usuario: any) => {
+          totaisPorUsuario[usuario.id] = financeirosList.filter(
+            (financeiro) => financeiro.encaminharCliente === usuario.id
+          ).length;
+        });
 
+        console.log("Totais por usuário:", totaisPorUsuario);
+
+        const totalFinanceiros = Object.values(totaisPorUsuario).reduce(
+          (acc, val) => acc + val,
+          0
+        );
+        console.log("Total financeiros:", totalFinanceiros);
+        setTotalFinanceiros(totalFinanceiros);
+      } catch (error) {
+        console.error("Erro ao buscar financeiros:", error);
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [setTotalFinanceiros]);
 
   // const handleCheckboxChange = (id: string) => {
   //   setSelectedItems((prevSelectedItems) => {
@@ -166,7 +194,9 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
         : true;
 
       // Verifique se encaminharCliente é "sim"
-      const isEncaminharClienteValid = financeiro.encaminharCliente === "sim";
+      const isEncaminharClienteValid = uid
+  ? financeiro.encaminharCliente === uid
+  : true;
 
       return (
         matchesSearchTerm &&
@@ -259,7 +289,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
               className="search-input"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleSearchClick()} 
+              onKeyPress={(e) => e.key === "Enter" && handleSearchClick()}
             />
           </div>
           <div className="selects-container">
