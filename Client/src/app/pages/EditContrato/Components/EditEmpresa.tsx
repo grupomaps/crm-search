@@ -140,6 +140,14 @@ export const EditEmpresa: React.FC<EditEmpresaFormProps> = ({
           </button>
         </div>
       </div>
+       <InputField
+        id="responsavel"
+        label="Nome do Autorizante"
+        name="responsavel"
+        value={form.responsavel}
+        onChange={handleInputChange}
+        placeholder="Insira o nome do autorizantes"
+      />
       <InputField
         id="linkAddAssinatura"
         label="Link da Assinatura"

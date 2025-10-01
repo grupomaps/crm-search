@@ -118,35 +118,14 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
   const [showPagos, setShowPagos] = useState(false);
   const [showNegativos, setShowNegativos] = useState(false);
 
-  useEffect(() => {
+useEffect(() => {
   const fetchFinanceiros = async () => {
     setLoading(true);
     try {
-      // 1. Buscar vendas com pós-venda concluída
-      const vendasQuery = query(
-        collection(db, "vendas"),
-        where("posVendaConcuida", "==", true)
-      );
-      const vendasSnapshot = await getDocs(vendasQuery);
-
-      // 2. Inserir cada venda na coleção "financeiros" (se já não existir)
-      for (const docSnap of vendasSnapshot.docs) {
-        const vendaData = docSnap.data();
-
-        const financeiroRef = doc(db, "financeiros", docSnap.id); 
-        const financeiroDoc = await getDoc(financeiroRef);
-
-        if (!financeiroDoc.exists()) {
-          await setDoc(financeiroRef, {
-            ...vendaData,
-            createdAt: new Date(), // opcional
-          });
-        }
-      }
-
-      // 3. Buscar todos os financeiros
+      // Só busca diretamente os financeiros
       const financeirosCollection = collection(db, "financeiros");
       const financeirosSnapshot = await getDocs(financeirosCollection);
+
       const financeirosList = financeirosSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -155,21 +134,20 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
       setFinanceiros(financeirosList);
       setTotalFinanceiros(financeirosList.length);
 
-      const totalPagos = financeirosList.filter(
-        (financeiro) => financeiro.rePagamento === "sim"
-      ).length;
-      setTotalPagos(totalPagos);
+      // Calcula contagens em uma única passada
+      const totais = financeirosList.reduce(
+        (acc, f) => {
+          if (f.rePagamento === "sim") acc.pagos++;
+          else if (f.rePagamento === "nao") acc.negativados++;
+          else if (f.rePagamento === "cancelado") acc.cancelados++;
+          return acc;
+        },
+        { pagos: 0, negativados: 0, cancelados: 0 }
+      );
 
-      const totalNegativados = financeirosList.filter(
-        (financeiro) => financeiro.rePagamento === "nao"
-      ).length;
-      setTotalNegativados(totalNegativados);
-
-      const totalCancelados = financeirosList.filter(
-        (financeiro) => financeiro.rePagamento === "cancelado"
-      ).length;
-      setTotalCancelados(totalCancelados);
-
+      setTotalPagos(totais.pagos);
+      setTotalNegativados(totais.negativados);
+      setTotalCancelados(totais.cancelados);
     } catch (error) {
       console.error("Erro ao buscar financeiros:", error);
     } finally {
@@ -178,12 +156,8 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
   };
 
   fetchFinanceiros();
-}, [
-  setTotalFinanceiros,
-  setTotalPagos,
-  setTotalNegativados,
-  setTotalCancelados,
-]);
+}, []);
+
 
   const handleSyncClients = async () => {
     setSyncLoading(true);
@@ -222,86 +196,61 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
     }
   };
 
-  const applyFilters = () => {
-    let filteredClients = financeiros.filter((marketing) => {
-      const lowerCaseTerm = activeSearchTerm.toLowerCase();
-      const matchesSearchTerm =
-        (marketing.cnpj &&
-          marketing.cnpj.toLowerCase().includes(lowerCaseTerm)) ||
-        (marketing.cpf &&
-          marketing.cpf.toLowerCase().includes(lowerCaseTerm)) ||
-        (marketing.responsavel &&
-          marketing.responsavel.toLowerCase().includes(lowerCaseTerm)) ||
-        (marketing.email1 &&
-          marketing.email1.toLowerCase().includes(lowerCaseTerm)) ||
-        (marketing.email2 &&
-          marketing.email2.toLowerCase().includes(lowerCaseTerm)) ||
-        (marketing.operador &&
-          marketing.operador.toLowerCase().includes(lowerCaseTerm));
-      marketing.account &&
-        marketing.account.toLowerCase().includes(lowerCaseTerm);
+ const applyFilters = () => {
+  const lowerCaseTerm = activeSearchTerm.toLowerCase();
 
-      const { startDate, endDate, dueDate, saleType, salesPerson, saleGroup } =
-        filters;
+  const startDateObj = filters.startDate ? new Date(filters.startDate) : null;
+  const endDateObj = filters.endDate ? new Date(filters.endDate) : null;
+  const dueDateObj = filters.dueDate ? new Date(filters.dueDate) : null;
 
-      const marketingData = new Date(marketing.data);
-      const isStartDateValid = startDate
-        ? marketingData.toDateString() === new Date(startDate).toDateString()
+  let filteredClients = financeiros.filter((mkt) => {
+    const matchesSearchTerm =
+      (mkt.cnpj?.toLowerCase().includes(lowerCaseTerm)) ||
+      (mkt.cpf?.toLowerCase().includes(lowerCaseTerm)) ||
+      (mkt.responsavel?.toLowerCase().includes(lowerCaseTerm)) ||
+      (mkt.email1?.toLowerCase().includes(lowerCaseTerm)) ||
+      (mkt.email2?.toLowerCase().includes(lowerCaseTerm)) ||
+      (mkt.operador?.toLowerCase().includes(lowerCaseTerm)) ||
+      (mkt.account?.toLowerCase().includes(lowerCaseTerm));
+
+    const marketingDate = mkt.data ? new Date(mkt.data) : null;
+
+    const isDateInRange = startDateObj && endDateObj
+      ? (marketingDate && marketingDate >= startDateObj && marketingDate <= endDateObj)
+      : startDateObj
+        ? (marketingDate && marketingDate.toDateString() === startDateObj.toDateString())
         : true;
 
-      const isDateInRange =
-        startDate && endDate
-          ? marketingData >= new Date(startDate) &&
-            marketingData <= new Date(endDate)
-          : isStartDateValid;
+    const isDueDateValid = dueDateObj
+      ? (mkt.dataVencimento && new Date(mkt.dataVencimento).toDateString() === dueDateObj.toDateString()) ||
+        (mkt.parcelasDetalhadas?.some(
+          (p) => p.dataVencimento && new Date(p.dataVencimento).toDateString() === dueDateObj.toDateString()
+        ))
+      : true;
 
-      // Verifica a data de vencimento principal ou nas parcelas
-      const isDueDateValid = dueDate
-        ? (marketing.dataVencimento &&
-            new Date(marketing.dataVencimento).toDateString() ===
-              new Date(dueDate).toDateString()) ||
-          (marketing.parcelasDetalhadas &&
-            marketing.parcelasDetalhadas.some(
-              (parcela) =>
-                parcela.dataVencimento &&
-                new Date(parcela.dataVencimento).toDateString() ===
-                  new Date(dueDate).toDateString()
-            ))
-        : true;
+    return (
+      matchesSearchTerm &&
+      isDateInRange &&
+      isDueDateValid &&
+      (!filters.saleType || mkt.contrato === filters.saleType) &&
+      (!filters.salesPerson || mkt.operador === filters.salesPerson) &&
+      (!filters.saleGroup || mkt.account === filters.saleGroup)
+    );
+  });
 
-      const isSaleTypeValid = saleType ? marketing.contrato === saleType : true;
-      const isSalesPersonValid = salesPerson
-        ? marketing.operador === salesPerson
-        : true;
-      const isGroupTypeValid = saleGroup
-        ? marketing.account === saleGroup
-        : true;
-      return (
-        matchesSearchTerm &&
-        isDateInRange &&
-        isDueDateValid &&
-        isSaleTypeValid &&
-        isSalesPersonValid &&
-        isGroupTypeValid
-      );
-    });
-    if (showCancelados) {
-      filteredClients = filteredClients.filter(
-        (marketing) => marketing.rePagamento === "cancelado"
-      );
-    }
-    if (showNegativos) {
-      filteredClients = filteredClients.filter(
-        (marketing) => marketing.rePagamento === "nao"
-      );
-    }
-    if (showPagos) {
-      filteredClients = filteredClients.filter(
-        (marketing) => marketing.rePagamento === "sim"
-      );
-    }
-    return filteredClients;
-  };
+  if (showCancelados) {
+    filteredClients = filteredClients.filter((m) => m.rePagamento === "cancelado");
+  }
+  if (showNegativos) {
+    filteredClients = filteredClients.filter((m) => m.rePagamento === "nao");
+  }
+  if (showPagos) {
+    filteredClients = filteredClients.filter((m) => m.rePagamento === "sim");
+  }
+
+  return filteredClients;
+};
+
   const handleSearchClick = () => {
     setActiveSearchTerm(searchTerm);
     setCurrentPage(1); // Resetar para a primeira página ao realizar nova pesquisa
@@ -580,7 +529,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
               <tr>
                 <th></th>
                 <th>CNPJ/CPF</th>
-                <th>Observações</th>
+                <th>Nome do Autorizante</th>
                 <th>Equipe</th>
                 <th>Operador</th>
                 <th></th>
@@ -623,7 +572,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                         : ""
                     }`}
                   >
-                    {marketing.observacoes}
+                    {marketing.responsavel}
                   </td>
                   <td
                     className={`${

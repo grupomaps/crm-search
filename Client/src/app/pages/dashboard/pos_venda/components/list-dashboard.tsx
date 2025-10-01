@@ -454,7 +454,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
               <tr>
                 <th></th>
                 <th>CNPJ</th>
-                <th>Observações</th>
+                <th>Nome do Autorizante</th>
                 <th>Operador</th>
                 <th>Operador Pós Venda</th>
                 <th></th>
@@ -493,7 +493,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                       posVenda.posVendaConcuida ? "servicos-realizados" : ""
                     }`}
                   >
-                    {posVenda.observacoes}
+                    {posVenda.responsavel}
                   </td>
                   <td
                     className={`${

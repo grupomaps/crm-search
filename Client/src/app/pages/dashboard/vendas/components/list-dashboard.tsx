@@ -513,7 +513,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
               <tr>
                 <th></th>
                 <th>CNPJ/CPF</th>
-                <th>Observações</th>
+                <th>Nome Autorizante</th>
                 <th>Operador</th>
                 <th></th>
               </tr>
@@ -537,7 +537,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                       : venda.cnpj || venda.cpf}
                   </td>
                   <td className={selectedItems.has(venda.id) ? "selected" : ""}>
-                    {venda.observacoes}
+                    {venda.responsavel}
                   </td>
                   <td className={selectedItems.has(venda.id) ? "selected" : ""}>
                     {venda.operador.replace(/\./g, " ")}

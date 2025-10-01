@@ -293,6 +293,17 @@ export const DadosEmpresa: React.FC<DadosEmpresaProps> = ({
           onChange={handleInputChange}
           placeholder="Insira o nome do operador"
         />
+      </div><div className="form-group mb-3 col-md-6">
+        <label htmlFor="nomeFantasia">Nome do Autorizante</label>
+        <input
+          type="text"
+          className="form-control"
+          id="responsavel"
+          name="responsavel"
+          value={form.responsavel}
+          onChange={handleInputChange}
+          placeholder="Insira o nome do autorizante"
+        />
       </div>
       <div className="form-group mb-3 col-md-6">
         <label htmlFor="nomeFantasia">CNPJ</label>

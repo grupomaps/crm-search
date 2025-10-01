@@ -328,6 +328,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
               <tr>
                 <th></th>
                 <th>CNPJ/CPF</th>
+                <th>Nome do Autorizante</th>
                 <th>Observações</th>
                 <th>Operador</th>
                 <th>Cobrador</th>
@@ -349,7 +350,13 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                       ? formatCPF(financeiro.cpf)
                       : financeiro.cnpj || financeiro.cpf}
                   </td>
-                  
+                  <td
+                    className={`${
+                      selectedItems.has(financeiro.id) ? "selected" : ""
+                    }`}
+                  >
+                    {financeiro.responsavel}
+                  </td>
                   <td
                     className={`${
                       selectedItems.has(financeiro.id) ? "selected" : ""

@@ -313,7 +313,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
               <tr>
                 <th></th>
                 <th>CNPJ/CPF</th>
-                <th>Observações</th>
+                <th>Nome do Autorizante</th>
                 <th>Operador</th>
                 <th>Monitor</th>
                 <th></th>
@@ -339,7 +339,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
                       selectedItems.has(venda.id) ? "selected" : ""
                     } ${venda.monitoriaConcluidaYes ? "concluida" : ""}`}
                   >
-                    {venda.observacoes}
+                    {venda.responsavel}
                   </td>
                   <td
                     className={`${

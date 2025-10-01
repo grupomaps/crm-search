@@ -606,7 +606,7 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
               <tr>
                 <th></th>
                 <th>CNPJ</th>
-                <th>Observações</th>
+                <th>Nome do Autorizante</th>
                 <th>Operador</th>
                 <th>Monitor</th>
                 <th></th>
@@ -656,7 +656,7 @@ ${checklistSemConclusao ? "servicos-incompletos" : ""}
 ${checklistSemConclusao ? "servicos-incompletos" : ""}
 `}
                     >
-                      {marketing.observacoes}
+                      {marketing.responsavel}
                     </td>
                     <td
                       className={`${
