@@ -12,6 +12,7 @@ interface Parcela {
 interface Form {
   acordo: string;
   dataCobranca: string;
+  observacoes: string;
   dataPagamento: string;
   valorPago: string;
   encaminharCliente: string;
@@ -31,6 +32,7 @@ export const CobrancaForm: React.FC<CobrancaFormProps> = ({
   const [form, setForm] = useState<Form>({
     acordo: "",
     dataCobranca: "",
+    observacoes: "",
     dataPagamento: "",
     valorPago: "",
     encaminharCliente: "",
@@ -156,6 +158,17 @@ export const CobrancaForm: React.FC<CobrancaFormProps> = ({
       <div className="col-12 col-md-6">
         <div className="card card-cob p-4">
           <form onSubmit={handleSubmit}>
+          <label htmlFor="observacoes" className="form-label">
+              Observações:
+            </label>
+            <input
+              type="text"
+              name="observacoes"
+              id="observacoes"
+              className="form-control mb-3"
+              value={form.observacoes || ""}
+              onChange={handleInputChange}
+            />
             <label htmlFor="acordoCobrança" className="form-label">
               Possui acordo com a cobrança?
             </label>
