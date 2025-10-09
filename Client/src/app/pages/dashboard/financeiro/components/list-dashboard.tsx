@@ -134,7 +134,6 @@ useEffect(() => {
       setFinanceiros(financeirosList);
       setTotalFinanceiros(financeirosList.length);
 
-      // Calcula contagens em uma única passada
       const totais = financeirosList.reduce(
         (acc, f) => {
           if (f.rePagamento === "sim") acc.pagos++;

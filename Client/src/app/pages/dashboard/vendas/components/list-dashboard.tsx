@@ -145,16 +145,20 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
   };
 
   const handleRemoveSelected = async () => {
-    if (selectedItems.size === 0 || !infoCancelamento.trim()) {
-      alert("Por favor, forneça um motivo para o cancelamento.");
-      return;
-    }
+  if (selectedItems.size === 0 || !infoCancelamento.trim()) {
+    alert("Por favor, forneça um motivo para o cancelamento.");
+    return;
+  }
 
+  try {
     const deletePromises = Array.from(selectedItems).map(async (id) => {
+      // 1️⃣ Busca o documento original da venda
       const vendaDoc = doc(db, "vendas", id);
-      const vendaData = (await getDoc(vendaDoc)).data();
+      const vendaSnap = await getDoc(vendaDoc);
+      const vendaData = vendaSnap.data();
 
       if (vendaData) {
+        // 2️⃣ Adiciona o documento à coleção 'cancelados'
         await setDoc(doc(db, "cancelados", id), {
           ...vendaData,
           infoCancelamento,
@@ -164,19 +168,30 @@ export const ListDashboard: React.FC<ListDashboardProps> = ({
         });
       }
 
-      await deleteDoc(vendaDoc);
+      await deleteDoc(vendaDoc); 
+      await deleteDoc(doc(db, "financeiros", id)).catch(() => {});
+      await deleteDoc(doc(db, "marketings", id)).catch(() => {});  
+      await deleteDoc(doc(db, "posvendas", id)).catch(() => {});   
     });
 
     await Promise.all(deletePromises);
 
+    // 4️⃣ Atualiza o estado local (interface)
     setVendas((prevVendas) =>
       prevVendas.filter((venda) => !selectedItems.has(venda.id))
     );
     setSelectedItems(new Set());
-    setInfoCancelamento(""); // Resetar o motivo após a exclusão
-    setRespCancelamento(""); // Resetar o motivo após a exclusão
+    setInfoCancelamento("");
+    setRespCancelamento("");
     closeModalExclusao();
-  };
+
+    alert("Venda(s) cancelada(s) com sucesso!");
+  } catch (error) {
+    console.error("Erro ao cancelar vendas:", error);
+    alert("Ocorreu um erro ao cancelar. Verifique o console.");
+  }
+};
+
 
   const applyFilters = () => {
     const filteredClients = vendas.filter((venda) => {

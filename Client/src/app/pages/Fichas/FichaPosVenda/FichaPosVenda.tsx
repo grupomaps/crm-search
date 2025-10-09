@@ -64,7 +64,7 @@ export const FichaPosVenda: React.FC = () => {
 
   const adicionarClienteMonitoria = async (data: any) => {
     try {
-      const financeirosRef = doc(db, "monitorias", id!);
+      const financeirosRef = doc(db, "financeiros", id!);
       const financeirosSnap = await getDoc(financeirosRef);
 
       if (financeirosSnap.exists()) {

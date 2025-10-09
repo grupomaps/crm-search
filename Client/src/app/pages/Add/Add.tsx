@@ -68,6 +68,7 @@ export const Add = () => {
     valorExtenso: "",
     diasSemana: [] as string[],
     linkAddAssinatura: "",
+    posVendaConcuida: true,
   });
 
   const [parcelasArray, setParcelasArray] = useState<Parcela[]>([]);
