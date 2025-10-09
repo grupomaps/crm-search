@@ -162,7 +162,7 @@ useEffect(() => {
   const handleSyncClients = async () => {
     setSyncLoading(true);
     try {
-      const salesCollection = collection(db, "marketings");
+      const salesCollection = collection(db, "vendas");
       const salesSnapshot = await getDocs(salesCollection);
       const salesList = salesSnapshot.docs.map((doc) => ({
         id: doc.id,
