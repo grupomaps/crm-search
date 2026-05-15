@@ -6,6 +6,7 @@ import {
   onSnapshot,
   getDocs,
 } from "firebase/firestore";
+// @ts-ignore: CSS module import without type declarations
 import "./Relatorio.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLeftLong, faRightLong } from "@fortawesome/free-solid-svg-icons";
