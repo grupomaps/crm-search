@@ -64,7 +64,13 @@ export const Relatorio: React.FC = () => {
     const today = new Date();
     const todayString = today.toISOString().split("T")[0];
     const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay()); // domingo
+    const day = today.getDay();
+
+// calcula quantos dias passaram desde sexta
+const daysSinceFriday = (day + 2) % 7;
+
+startOfWeek.setDate(today.getDate() - daysSinceFriday);
+startOfWeek.setHours(0, 0, 0, 0);
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
     let baseCount = 0;
@@ -79,7 +85,10 @@ export const Relatorio: React.FC = () => {
       const usuario = usuariosMap[usuarioID];
       const vendaComAvatar = { ...venda, avatar: usuario?.avatar };
 
-      const dataVenda = new Date(venda.data);
+      const [ano, mes, dia] = venda.data.split("-").map(Number);
+
+const dataVenda = new Date(ano, mes - 1, dia);
+dataVenda.setHours(0, 0, 0, 0);
 
       if (venda.data === todayString) {
         vendasHoje.push(vendaComAvatar);
